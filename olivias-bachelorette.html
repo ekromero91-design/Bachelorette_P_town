@@ -16,7 +16,7 @@
             align-items: center;
             min-height: 100vh;
             text-align: center;
-            overflow-x: hidden;
+            position: relative;
         }
         
         h1 {
@@ -24,319 +24,123 @@
             font-size: 3rem;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             line-height: 1.2;
-            animation: bounce 2s infinite;
         }
         
-        .buttons-container {
+        .venmo-cta {
+            color: #3D95CE;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.5s forwards;
+        }
+        
+        .payment-buttons {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             max-width: 600px;
         }
         
-        .buy-drink-btn {
+        .payment-btn {
             color: white;
             border: none;
             padding: 15px 25px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            border-radius: 50px;
+            border-radius: 30px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            position: relative;
-            overflow: hidden;
-            animation: glow 3s infinite;
+            min-width: 120px;
         }
         
-        .buy-drink-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: rotate(45deg);
-            animation: shimmer 3s infinite;
+        .payment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
         
-        .btn-small {
-            background: linear-gradient(135deg, #B19CD9, #9B7FD9);
-        }
+        .btn-5 { background: linear-gradient(45deg, #ff6b6b, #ff8e8e); }
+        .btn-10 { background: linear-gradient(45deg, #4ecdc4, #44b3a8); }
+        .btn-15 { background: linear-gradient(45deg, #45b7d1, #3498db); }
+        .btn-20 { background: linear-gradient(45deg, #96ceb4, #7fb69e); }
+        .btn-25 { background: linear-gradient(45deg, #f9ca24, #f0932b); }
         
-        .btn-medium {
-            background: linear-gradient(135deg, #FF6B9D, #FF8FB3);
-        }
-        
-        .btn-large {
-            background: linear-gradient(135deg, #4ECDC4, #44B3A3);
-        }
-        
-        .btn-premium {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            animation: pulse 2s infinite;
-        }
-        
-        .buy-drink-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-        
-        .venmo-cta {
-            color: #FFFFFF;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            animation: fadeInUp 0.8s ease-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .venmo-logo {
-            background: #3D95CE;
-            color: white;
-            padding: 8px 16px;
+        .message-board {
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .subtitle {
-            color: #FFE5CC;
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            animation: fadeInUp 1s ease-out;
-        }
-        
-        .instructions {
-            color: #FFFFFF;
-            font-size: 1.1rem;
-            margin-top: 1rem;
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 25px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            animation: fadeInUp 1.5s ease-out;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-        
-        @keyframes glow {
-            0% {
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            }
-            50% {
-                box-shadow: 0 4px 20px rgba(255,255,255,0.4);
-            }
-            100% {
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            }
-        }
-        
-        @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 100%;
-            }
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0px) rotate(0deg);
-            }
-            33% {
-                transform: translateY(-20px) rotate(5deg);
-            }
-            66% {
-                transform: translateY(10px) rotate(-3deg);
-            }
-            100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-        }
-        
-        .floating-emoji {
-            position: fixed;
-            font-size: 2rem;
-            animation: float 4s infinite;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        
-        /* Message Board Styles */
-        .message-board-section {
-            width: 100%;
+            padding: 20px;
+            margin: 20px;
             max-width: 600px;
-            margin: 3rem 0;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            position: relative;
+            width: 90%;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
         
-        .message-title {
-            color: #FFD700;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: fadeInUp 1.2s ease-out;
+        .message-board h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
         }
         
         .message-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 2rem;
+            margin-bottom: 20px;
         }
         
         .message-form input, .message-form textarea {
-            padding: 12px 16px;
-            border: none;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            font-family: inherit;
-            resize: none;
-        }
-        
-        .message-form input:focus, .message-form textarea:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-        
-        .submit-btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #FF6B9D, #FF8FB3);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            align-self: center;
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
-        }
-        
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .admin-toggle {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-        }
-        
-        .admin-toggle:hover {
-            opacity: 1;
-        }
-        
-        .admin-password {
-            margin: 1rem 0;
+            width: 100%;
             padding: 10px;
-            background: rgba(0, 0, 0, 0.1);
+            margin: 5px 0;
+            border: 2px solid #ddd;
             border-radius: 10px;
+            font-size: 1rem;
+            box-sizing: border-box;
         }
         
-        .admin-password input {
-            padding: 8px 12px;
-            margin-right: 10px;
-            border: none;
-            border-radius: 15px;
-        }
-        
-        .admin-password button {
-            padding: 8px 16px;
-            background: #ff4757;
+        .message-form button {
+            background: linear-gradient(45deg, #B19CD9, #A08BD4);
             color: white;
             border: none;
-            border-radius: 15px;
+            padding: 12px 25px;
+            border-radius: 25px;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
         
-        .messages-container {
-            max-height: 400px;
+        .message-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(177, 156, 217, 0.4);
+        }
+        
+        .messages {
+            max-height: 300px;
             overflow-y: auto;
-            padding: 1rem 0;
+            margin-top: 20px;
         }
         
-        .message-item {
-            background: rgba(255, 255, 255, 0.9);
-            margin: 10px 0;
+        .message {
+            background: #f8f9fa;
+            border-radius: 10px;
             padding: 15px;
-            border-radius: 15px;
-            text-align: left;
-            animation: messageSlideIn 0.5s ease-out;
+            margin: 10px 0;
+            border-left: 4px solid #B19CD9;
             position: relative;
         }
         
-        .message-sender {
+        .message-author {
             font-weight: bold;
-            color: #FF6B9D;
+            color: #B19CD9;
             margin-bottom: 5px;
         }
         
-        .message-content {
+        .message-text {
             color: #333;
             line-height: 1.4;
         }
@@ -349,347 +153,292 @@
         
         .delete-btn {
             position: absolute;
-            top: 5px;
+            top: 10px;
             right: 10px;
-            background: #ff4757;
+            background: #ff6b6b;
             color: white;
             border: none;
             border-radius: 50%;
             width: 25px;
             height: 25px;
-            font-size: 0.8rem;
             cursor: pointer;
+            font-size: 12px;
             display: none;
         }
         
-        .admin-mode .delete-btn {
-            display: block;
+        .admin-controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
         }
         
-        .loading-message {
-            color: #FFE5CC;
-            font-style: italic;
-            padding: 20px;
+        .admin-controls input {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
         
-        @keyframes messageSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
+        .admin-controls button {
+            margin: 5px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .login-btn {
+            background: #28a745;
+            color: white;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .floating-emoji {
+            position: fixed;
+            font-size: 30px;
+            pointer-events: none;
+            z-index: 1000;
+            animation: floatUp 3s ease-out forwards;
+        }
+        
+        @keyframes floatUp {
+            0% {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateY(0px) scale(1);
             }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(1.5);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes sparkle {
+            0% { opacity: 1; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
         }
         
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
                 padding: 0 20px;
             }
             
-            .subtitle {
-                font-size: 1.1rem;
-                padding: 0 20px;
-            }
-            
-            .buttons-container {
+            .payment-buttons {
                 flex-direction: column;
                 align-items: center;
-                gap: 12px;
             }
             
-            .buy-drink-btn {
-                font-size: 1.1rem;
+            .payment-btn {
+                font-size: 1rem;
                 padding: 12px 20px;
                 width: 200px;
             }
+            
+            .message-board {
+                margin: 10px;
+                padding: 15px;
+            }
         }
     </style>
-    <!-- GitHub API-based message board - no external dependencies needed! -->
 </head>
 <body>
     <h1>Welcome to Olivia's<br>Bachelorette Extravaganza</h1>
     
     <div class="venmo-cta">
-        Would you like to <span class="venmo-logo">Venmo</span> some drinks? 💸
+        Would you like to Venmo... 💜
     </div>
     
-    <div class="subtitle">
-        🥂 Help us celebrate the bride-to-be! 🥂
+    <div class="payment-buttons">
+        <button class="payment-btn btn-5" onclick="buyDrink(5)">$5 🍷</button>
+        <button class="payment-btn btn-10" onclick="buyDrink(10)">$10 🍸</button>
+        <button class="payment-btn btn-15" onclick="buyDrink(15)">$15 🍹</button>
+        <button class="payment-btn btn-20" onclick="buyDrink(20)">$20 🥂</button>
+        <button class="payment-btn btn-25" onclick="buyDrink(25)">$25 🍾</button>
     </div>
     
-    <div class="buttons-container">
-        <a href="venmo://paycharge?txn=pay&recipients=shewerewolf&amount=5&note=Shot%20for%20Olivia!%20🥃" class="buy-drink-btn btn-small" target="_blank">
-            $5 - Shot! 🥃
-        </a>
+    <div class="message-board">
+        <h2>💌 Messages for the Bride 💌</h2>
         
-        <a href="venmo://paycharge?txn=pay&recipients=shewerewolf&amount=10&note=Cocktail%20for%20Olivia!%20🍹" class="buy-drink-btn btn-medium" target="_blank">
-            $10 - Cocktail! 🍹
-        </a>
+        <div class="admin-controls">
+            <input type="password" id="adminPassword" placeholder="Admin Password" style="display: none;">
+            <button id="adminToggle" class="login-btn" onclick="toggleAdmin()">Admin Login</button>
+            <button id="adminLogout" class="logout-btn" onclick="logoutAdmin()" style="display: none;">Logout</button>
+        </div>
         
-        <a href="venmo://paycharge?txn=pay&recipients=shewerewolf&amount=15&note=Wine%20for%20Olivia!%20🍷" class="buy-drink-btn btn-large" target="_blank">
-            $15 - Wine! 🍷
-        </a>
+        <div id="status" class="status"></div>
         
-        <a href="venmo://paycharge?txn=pay&recipients=shewerewolf&amount=25&note=Champagne%20for%20Olivia!%20🍾" class="buy-drink-btn btn-premium" target="_blank">
-            $25 - Champagne! 🍾
-        </a>
-        
-        <a href="https://account.venmo.com/u/shewerewolf" class="buy-drink-btn btn-small" target="_blank">
-            Any Amount 💝
-        </a>
-    </div>
-    
-    <div class="instructions">
-        💸 Just enter the amount from the button you clicked! 💸
-    </div>
-    
-    <!-- Message Board Section -->
-    <div class="message-board-section">
-        <h2 class="message-title">💕 Messages for Olivia 💕</h2>
-        
-        <!-- Message Form -->
         <div class="message-form">
-            <input type="text" id="userName" placeholder="Your name" maxlength="20">
-            <textarea id="userMessage" placeholder="Leave a sweet message for the bride! ✨" maxlength="150" rows="2"></textarea>
-            <button id="submitMessage" class="submit-btn">Send Love 💖</button>
+            <input type="text" id="messageAuthor" placeholder="Your name" maxlength="30">
+            <textarea id="messageText" placeholder="Leave a sweet message for Olivia!" rows="3" maxlength="200"></textarea>
+            <button onclick="submitMessage()">Send Message 💕</button>
         </div>
         
-        <!-- Admin Toggle (Hidden by default) -->
-        <div class="admin-toggle" onclick="toggleAdmin()" title="Admin Access">🔧</div>
-        <div id="adminPassword" class="admin-password" style="display: none;">
-            <input type="password" id="adminPass" placeholder="Admin password">
-            <button onclick="checkAdmin()">Login</button>
-        </div>
-        
-        <!-- Messages Display -->
-        <div id="messagesContainer" class="messages-container">
-            <div class="loading-message">Loading messages... 💫</div>
-        </div>
+        <div id="messages" class="messages"></div>
     </div>
     
     <script>
-        // Enhanced sparkle effect
-        function createSparkle() {
-            const sparkles = ['✨', '🌟', '💫', '⭐', '🎊'];
-            const sparkle = document.createElement('div');
-            sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
-            sparkle.style.position = 'fixed';
-            sparkle.style.left = Math.random() * window.innerWidth + 'px';
-            sparkle.style.top = Math.random() * window.innerHeight + 'px';
-            sparkle.style.fontSize = Math.random() * 20 + 15 + 'px';
-            sparkle.style.pointerEvents = 'none';
-            sparkle.style.animation = 'sparkle 3s linear forwards';
-            sparkle.style.zIndex = '999';
-            document.body.appendChild(sparkle);
-            
-            setTimeout(() => {
-                if (sparkle.parentNode) {
-                    sparkle.remove();
-                }
-            }, 3000);
-        }
-        
-        // Floating party emojis
-        function createFloatingEmoji() {
-            const emojis = ['🎉', '🥂', '💃', '🎈', '🌸', '💖', '🦄', '👑'];
-            const emoji = document.createElement('div');
-            emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-            emoji.className = 'floating-emoji';
-            emoji.style.left = Math.random() * (window.innerWidth - 50) + 'px';
-            emoji.style.top = Math.random() * (window.innerHeight - 50) + 'px';
-            emoji.style.animationDelay = Math.random() * 2 + 's';
-            document.body.appendChild(emoji);
-            
-            setTimeout(() => {
-                if (emoji.parentNode) {
-                    emoji.remove();
-                }
-            }, 8000);
-        }
-        
-        // Create global audio context
+        // === GLOBAL STATE ===
+        let isAdminMode = false;
         let audioContext = null;
         
-        function initAudioContext() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Resume audio context for mobile (required by iOS Safari)
-                if (audioContext.state === 'suspended') {
-                    audioContext.resume();
-                }
-            }
-            return audioContext;
-        }
+        // GitHub repository info
+        const GITHUB_CONFIG = {
+            owner: 'ekromero91-design',
+            repo: 'Bachelorette_P_town',
+            filePath: 'olivias-bachelorette.html'
+        };
         
-        // Create sound effects
-        function playCheerSound() {
-            try {
-                const ctx = initAudioContext();
-                if (!ctx) return;
-                
-                // Create a short celebratory beep
-                const oscillator = ctx.createOscillator();
-                const gainNode = ctx.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(ctx.destination);
-                
-                // Happy celebration frequency
-                oscillator.frequency.setValueAtTime(800, ctx.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
-                oscillator.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.2);
-                
-                // Volume envelope for a "pop" sound
-                gainNode.gain.setValueAtTime(0, ctx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-                
-                oscillator.start(ctx.currentTime);
-                oscillator.stop(ctx.currentTime + 0.3);
-            } catch(e) {
-                console.log('Audio not supported');
-            }
-        }
+        // Embedded GitHub token for seamless message storage in code
+        const githubToken = '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';
         
-        function playBubblesSound() {
-            try {
-                const ctx = initAudioContext();
-                if (!ctx) return;
-                
-                for(let i = 0; i < 3; i++) {
-                    setTimeout(() => {
-                        const oscillator = ctx.createOscillator();
-                        const gainNode = ctx.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(ctx.destination);
-                        
-                        // Bubble pop frequency
-                        oscillator.frequency.setValueAtTime(1000 + Math.random() * 500, ctx.currentTime);
-                        oscillator.type = 'sine';
-                        
-                        gainNode.gain.setValueAtTime(0, ctx.currentTime);
-                        gainNode.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-                        
-                        oscillator.start(ctx.currentTime);
-                        oscillator.stop(ctx.currentTime + 0.1);
-                    }, i * 50);
-                }
-            } catch(e) {
-                console.log('Audio not supported');
-            }
-        }
+        // Messages array - stored directly in code and updated via GitHub commits!
+        let messages = [];
         
-        // Button click effects
-        document.querySelectorAll('.buy-drink-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                // Prevent default to ensure sound plays before navigation
-                e.preventDefault();
-                
-                // Play sound effects
-                playCheerSound();
-                setTimeout(() => playBubblesSound(), 100);
-                
-                // Create explosion of hearts
-                for(let i = 0; i < 8; i++) {
-                    setTimeout(() => {
-                        const heart = document.createElement('div');
-                        heart.innerHTML = '💕';
-                        heart.style.position = 'fixed';
-                        const rect = button.getBoundingClientRect();
-                        heart.style.left = rect.left + rect.width/2 + 'px';
-                        heart.style.top = rect.top + rect.height/2 + 'px';
-                        heart.style.fontSize = '20px';
-                        heart.style.pointerEvents = 'none';
-                        heart.style.animation = `heartBurst 1.5s ease-out forwards`;
-                        heart.style.transform = `rotate(${Math.random() * 360}deg)`;
-                        document.body.appendChild(heart);
-                        
-                        setTimeout(() => {
-                            if (heart.parentNode) {
-                                heart.remove();
-                            }
-                        }, 1500);
-                    }, i * 100);
-                }
-                
-                // Navigate to Venmo after sound and animation
-                setTimeout(() => {
-                    window.open(button.href, '_blank');
-                }, 500);
-            });
-        });
-        
-        // Add CSS for new animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes sparkle {
-                0% { opacity: 1; transform: scale(0) rotate(0deg); }
-                50% { opacity: 1; transform: scale(1) rotate(180deg); }
-                100% { opacity: 0; transform: scale(0) rotate(360deg); }
-            }
-            
-            @keyframes heartBurst {
-                0% {
-                    opacity: 1;
-                    transform: scale(0) translateX(0) translateY(0);
-                }
-                100% {
-                    opacity: 0;
-                    transform: scale(1) translateX(${Math.random() * 200 - 100}px) translateY(${Math.random() * 200 - 100}px);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Create effects periodically
-        setInterval(createSparkle, 800);
-        setInterval(createFloatingEmoji, 3000);
-        
-        // Initial burst of emojis
-        for(let i = 0; i < 5; i++) {
-            setTimeout(createFloatingEmoji, i * 500);
-        }
-        
-        // Message Board Functionality
-        let isAdminMode = false;
-        const ADMIN_PASSWORD = 'olivia2024';
-        
-        // Profanity filter - blocks inappropriate content
+        // Profanity filter
         const BLOCKED_WORDS = [
-            'fuck', 'shit', 'damn', 'bitch', 'ass', 'dick', 'cock', 'pussy', 'slut', 'whore',
-            'bastard', 'cunt', 'piss', 'tits', 'boobs', 'sex', 'porn', 'naked', 'nude',
-            'kill', 'die', 'hate', 'ugly', 'fat', 'stupid', 'idiot', 'loser', 'pathetic',
-            'divorce', 'break up', 'cheat', 'affair', 'mistake', 'regret', 'worst', 'horrible'
+            'fuck', 'shit', 'damn', 'hell', 'ass', 'bitch', 'bastard', 'crap', 'piss', 'dick',
+            'cock', 'pussy', 'slut', 'whore', 'fag', 'gay', 'lesbian', 'stupid', 'idiot', 'moron',
+            'retard', 'loser', 'ugly', 'fat', 'skinny', 'bald', 'short', 'tall', 'old', 'young'
         ];
         
         const BLOCKED_PHRASES = [
-            'fuck you', 'fuck off', 'go to hell', 'screw you', 'piss off',
-            'you suck', 'i hate', 'worst decision', 'big mistake', 'gonna regret',
-            'bad choice', 'wrong guy', 'terrible idea', 'dont marry', 'run away'
+            'fuck you', 'go to hell', 'shut up', 'you suck', 'i hate you', 'you are stupid',
+            'you are ugly', 'you are fat', 'you are a loser', 'get lost', 'go away',
+            'leave me alone', 'i don\'t like you', 'you are annoying', 'you are weird',
+            'you are crazy', 'you are dumb', 'you are pathetic', 'you are a bitch',
+            'you are a slut', 'you are a whore', 'don\'t marry', 'bad idea', 'terrible choice'
         ];
         
-        function containsInappropriateContent(text) {
+        // === AUDIO EFFECTS ===
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+        
+        function playCheerSound() {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+            oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        // === VENMO PAYMENT FUNCTIONS ===
+        function buyDrink(amount) {
+            initAudio();
+            playCheerSound();
+            createHeartBurst();
+            
+            const notes = {
+                5: 'Thanks for the wine! 🍷',
+                10: 'Cheers to the bride! 🍸',
+                15: 'Party time! 🍹',
+                20: 'Celebration mode! 🥂',
+                25: 'You\'re amazing! 🍾'
+            };
+            
+            const note = notes[amount] || 'Cheers!';
+            
+            // Try mobile app deep link first
+            const venmoAppUrl = `venmo://paycharge?txn=pay&recipients=shewerewolf&amount=${amount}&note=${encodeURIComponent(note)}`;
+            
+            // Fallback to web URL
+            const venmoWebUrl = `https://venmo.com/u/shewerewolf?txn=pay&amount=${amount}&note=${encodeURIComponent(note)}`;
+            
+            // Try to open mobile app, fallback to web
+            setTimeout(() => {
+                window.location.href = venmoAppUrl;
+                setTimeout(() => {
+                    window.open(venmoWebUrl, '_blank');
+                }, 500);
+            }, 200);
+        }
+        
+        function createHeartBurst() {
+            const hearts = ['💕', '💖', '💗', '💘', '💝', '💞', '💟'];
+            
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.className = 'floating-emoji';
+                    heart.style.left = (window.innerWidth / 2 + (Math.random() - 0.5) * 200) + 'px';
+                    heart.style.top = (window.innerHeight / 2) + 'px';
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 100);
+            }
+        }
+        
+        // === MESSAGE FUNCTIONS ===
+        function containsProfanity(text) {
             const lowerText = text.toLowerCase();
             
-            // Check for blocked phrases first (more specific)
+            // Check blocked phrases first
             for (const phrase of BLOCKED_PHRASES) {
                 if (lowerText.includes(phrase)) {
                     return true;
                 }
             }
             
-            // Check for individual blocked words
-            const words = lowerText.split(/\s+/);
+            // Check individual words
+            const words = lowerText.match(/\b\w+\b/g) || [];
             for (const word of words) {
-                // Remove punctuation for checking
-                const cleanWord = word.replace(/[^a-z0-9]/g, '');
-                if (BLOCKED_WORDS.includes(cleanWord)) {
+                if (BLOCKED_WORDS.includes(word)) {
                     return true;
                 }
             }
@@ -697,451 +446,299 @@
             return false;
         }
         
-        // HARDCODED MESSAGES ARRAY - This gets updated via GitHub API commits!
-        // When new messages are added, this array is updated and the file is committed to GitHub
-        let messages = [
-            {
-                id: '1',
-                name: 'Sarah',
-                message: "OMG Olivia! Can't wait to celebrate you tonight! You're going to be the most beautiful bride! 💖",
-                timestamp: new Date(Date.now() - 300000).toLocaleString()
-            },
-            {
-                id: '2', 
-                name: 'Mom',
-                message: "So proud of you my beautiful daughter! Have the most amazing night with your girls! Love you! 🥂",
-                timestamp: new Date(Date.now() - 600000).toLocaleString()
-            }
-        ];
-        
-        // GitHub API configuration
-        const GITHUB_CONFIG = {
-            owner: 'ekromero91-design',
-            repo: 'Bachelorette_P_town',
-            path: 'olivias-bachelorette.html',
-            branch: 'main'
-        };
-        
-        // Embedded GitHub token for seamless user experience
-        // This token only has permission to write to this specific repo
-        let githubToken = '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';
-        let deploymentStatus = 'ready'; // 'ready', 'submitting', 'deploying', 'error'
-        
-        console.log('GitHub-powered message board initialized! Messages stored in code and deployed via GitHub Pages.');
-        
-        // GitHub API Functions - Messages stored directly in HTML via commits!
-        
-        // Get current file content from GitHub
-        async function getCurrentFileContent() {
-            try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`, {
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `token ${githubToken}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    return {
-                        content: atob(data.content.replace(/\n/g, '')),
-                        sha: data.sha
-                    };
-                } else {
-                    throw new Error(`Failed to get file: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Error getting file content:', error);
-                throw error;
-            }
-        }
-        
-        // Update messages array in HTML content
-        function updateMessagesInHtml(htmlContent, newMessages) {
-            // Find the messages array in the HTML and replace it
-            const messagesRegex = /(let messages = \[)(.*?)(\];)/s;
-            const match = htmlContent.match(messagesRegex);
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
             
-            if (match) {
-                const newMessagesString = JSON.stringify(newMessages, null, 12).replace(/^/gm, '            ');
-                const updatedContent = htmlContent.replace(
-                    messagesRegex,
-                    `let messages = ${newMessagesString};`
-                );
-                return updatedContent;
-            } else {
-                throw new Error('Could not find messages array in HTML');
-            }
-        }
-        
-        // Commit updated HTML to GitHub
-        async function commitToGitHub(newMessages, isDelete = false) {
-            if (!githubToken) {
-                // Request GitHub token from admin
-                await requestGitHubToken();
-                if (!githubToken) {
-                    throw new Error('GitHub token required for message sync');
-                }
-            }
-            
-            try {
-                setDeploymentStatus('submitting');
-                
-                // Get current file content and SHA
-                const { content, sha } = await getCurrentFileContent();
-                
-                // Update the messages array in the HTML
-                const updatedContent = updateMessagesInHtml(content, newMessages);
-                
-                // Commit the updated file
-                const commitMessage = isDelete ? 
-                    `🗑️ Admin deleted a message` : 
-                    `💕 New message from ${newMessages[0]?.name || 'guest'}`;
-                
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `token ${githubToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: commitMessage,
-                        content: btoa(updatedContent),
-                        sha: sha,
-                        branch: GITHUB_CONFIG.branch
-                    })
-                });
-                
-                if (response.ok) {
-                    console.log('Successfully committed to GitHub!');
-                    setDeploymentStatus('deploying');
-                    
-                    // GitHub Pages deployment takes 30-60 seconds
-                    setTimeout(() => {
-                        setDeploymentStatus('ready');
-                        showDeploymentSuccess();
-                    }, 45000);
-                    
-                    return true;
-                } else {
-                    const errorData = await response.json();
-                    throw new Error(`GitHub API error: ${errorData.message}`);
-                }
-            } catch (error) {
-                console.error('Error committing to GitHub:', error);
-                setDeploymentStatus('error');
-                throw error;
-            }
-        }
-        
-        // Request GitHub token from admin (only needed for first message or deletion)
-        async function requestGitHubToken() {
-            return new Promise((resolve) => {
-                const tokenInput = prompt(`Admin: Enter GitHub Personal Access Token to enable message sync:\n\n` +
-                    `1. Go to GitHub.com → Settings → Developer settings → Personal access tokens\n` +
-                    `2. Generate new token with 'repo' permissions\n` +
-                    `3. Copy and paste the token here:\n\n` +
-                    `(This enables real cross-device message sync via GitHub commits)`);
-                
-                if (tokenInput && tokenInput.trim()) {
-                    githubToken = tokenInput.trim();
-                    localStorage.setItem('githubToken', githubToken);
-                    resolve(githubToken);
-                } else {
-                    resolve(null);
-                }
-            });
-        }
-        
-        // Load saved GitHub token
-        function loadGitHubToken() {
-            const saved = localStorage.getItem('githubToken');
-            if (saved) {
-                githubToken = saved;
-            }
-        }
-        
-        function toggleAdmin() {
-            if (isAdminMode) {
-                logoutAdmin();
-            } else {
-                const adminDiv = document.getElementById('adminPassword');
-                adminDiv.style.display = adminDiv.style.display === 'none' ? 'block' : 'none';
-            }
-        }
-        
-        function checkAdmin() {
-            const password = document.getElementById('adminPass').value;
-            if (password === ADMIN_PASSWORD) {
-                isAdminMode = true;
-                document.getElementById('adminPassword').style.display = 'none';
-                document.getElementById('adminPass').value = '';
-                document.body.classList.add('admin-mode');
-                
-                // Change admin toggle to logout button
-                const adminToggle = document.querySelector('.admin-toggle');
-                adminToggle.innerHTML = '🚪';
-                adminToggle.title = 'Logout Admin';
-                
-                displayMessages();
-                alert('Admin mode activated! You can now delete messages. Click 🚪 to logout.');
-            } else {
-                alert('Incorrect password');
-            }
-        }
-        
-        function logoutAdmin() {
-            isAdminMode = false;
-            document.body.classList.remove('admin-mode');
-            
-            // Change back to admin toggle
-            const adminToggle = document.querySelector('.admin-toggle');
-            adminToggle.innerHTML = '🔧';
-            adminToggle.title = 'Admin Access';
-            
-            displayMessages();
-            alert('Logged out of admin mode.');
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
         }
         
         async function submitMessage() {
-            const name = document.getElementById('userName').value.trim();
-            const message = document.getElementById('userMessage').value.trim();
+            const authorInput = document.getElementById('messageAuthor');
+            const textInput = document.getElementById('messageText');
+            const author = authorInput.value.trim();
+            const text = textInput.value.trim();
             
-            if (!name || !message) {
-                alert('Please enter both your name and a message!');
+            if (!author || !text) {
+                showStatus('Please fill in both name and message!', 'error');
                 return;
             }
             
-            // Check for inappropriate content
-            if (containsInappropriateContent(name) || containsInappropriateContent(message)) {
-                alert('Please keep your message sweet and appropriate for Olivia\'s special day! 💕');
+            if (containsProfanity(author) || containsProfanity(text)) {
+                showStatus('Please keep messages appropriate and positive! 💕', 'error');
                 return;
             }
             
-            if (deploymentStatus !== 'ready') {
-                alert('Please wait, a message is still being deployed! Try again in a moment. 🚀');
-                return;
-            }
-            
-            const newMessage = {
+            const message = {
                 id: Date.now().toString(),
-                name: name.substring(0, 20),
-                message: message.substring(0, 150),
-                timestamp: new Date().toLocaleString()
+                author: author,
+                text: text,
+                timestamp: new Date().toISOString()
             };
             
-            try {
-                // Add message to current list (for immediate UI update)
-                messages.unshift(newMessage);
-                displayMessages();
-                
-                // Clear form immediately
-                document.getElementById('userName').value = '';
-                document.getElementById('userMessage').value = '';
-                
-                // Show success sounds and effects
-                playCheerSound();
-                setTimeout(playBubblesSound, 200);
-                createFloatingEmoji();
-                
-                // Commit to GitHub (this will update the hardcoded array in the HTML)
-                await commitToGitHub(messages, false);
-                
-                // Show deployment status
-                showDeploymentNotification('Message submitted! Deploying to all devices... ⏳');
-                
-            } catch (error) {
-                console.error('Error submitting message:', error);
-                
-                // Remove the message from local array on error
-                messages = messages.filter(msg => msg.id !== newMessage.id);
-                displayMessages();
-                
-                if (error.message.includes('token')) {
-                    alert('GitHub token needed for cross-device sync. Your message will only show locally until token is set.');
-                } else {
-                    alert(`Failed to deploy message: ${error.message}`);
+            // Add to local array
+            messages.unshift(message);
+            
+            // Clear form
+            authorInput.value = '';
+            textInput.value = '';
+            
+            // Update display
+            displayMessages();
+            
+            // Try to sync to GitHub if admin has provided token
+            if (githubToken) {
+                try {
+                    showStatus('Syncing message across devices...', 'info');
+                    await commitMessagesToGitHub();
+                    showStatus('Message saved and synced! 💕', 'success');
+                } catch (error) {
+                    console.error('GitHub sync failed:', error);
+                    showStatus('Message saved locally. GitHub sync failed - check token.', 'error');
                 }
+            } else {
+                showStatus('Message saved locally! (Admin: add GitHub token for cross-device sync)', 'success');
+                // Save to localStorage as backup
+                localStorage.setItem('bachelorette_messages', JSON.stringify(messages));
             }
         }
         
         async function deleteMessage(messageId) {
             if (!isAdminMode) return;
             
-            if (deploymentStatus !== 'ready') {
-                alert('Please wait, another deployment is in progress! Try again in a moment. 🚀');
-                return;
-            }
+            messages = messages.filter(msg => msg.id !== messageId);
+            displayMessages();
             
-            if (!confirm('Are you sure you want to delete this message? This will update the live site.')) {
-                return;
-            }
-            
-            try {
-                // Remove message from current list (for immediate UI update)
-                const originalMessages = [...messages];
-                messages = messages.filter(msg => msg.id !== messageId);
-                displayMessages();
-                
-                // Commit deletion to GitHub (this will update the hardcoded array in the HTML)
-                await commitToGitHub(messages, true);
-                
-                // Show deployment status
-                showDeploymentNotification('Message deleted! Deploying to all devices... ⏳');
-                
-            } catch (error) {
-                console.error('Error deleting message:', error);
-                
-                // Restore the message on error
-                messages = originalMessages;
-                displayMessages();
-                
-                if (error.message.includes('token')) {
-                    alert('GitHub token needed for cross-device sync. Message only deleted locally until token is set.');
-                } else {
-                    alert(`Failed to deploy deletion: ${error.message}`);
+            if (githubToken) {
+                try {
+                    showStatus('Deleting message...', 'info');
+                    await commitMessagesToGitHub();
+                    showStatus('Message deleted and synced!', 'success');
+                } catch (error) {
+                    console.error('GitHub sync failed:', error);
+                    showStatus('Message deleted locally. GitHub sync failed.', 'error');
                 }
+            } else {
+                localStorage.setItem('bachelorette_messages', JSON.stringify(messages));
+                showStatus('Message deleted locally!', 'success');
             }
         }
         
         function displayMessages() {
-            const container = document.getElementById('messagesContainer');
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = '';
             
             if (messages.length === 0) {
-                container.innerHTML = '<div class="loading-message">No messages yet! Be the first to send love to Olivia! 💕</div>';
+                messagesDiv.innerHTML = '<p style="color: #666; font-style: italic;">No messages yet. Be the first to leave a sweet message for Olivia! 💕</p>';
                 return;
             }
             
-            container.innerHTML = messages.map(msg => `
-                <div class="message-item">
-                    <div class="message-sender">${msg.name}</div>
-                    <div class="message-content">${msg.message}</div>
-                    <div class="message-time">${msg.timestamp}</div>
-                    <button class="delete-btn" onclick="deleteMessage('${msg.id}')" title="Delete message">×</button>
-                </div>
-            `).join('');
+            messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.innerHTML = `
+                    <div class="message-author">${escapeHtml(message.author)}</div>
+                    <div class="message-text">${escapeHtml(message.text)}</div>
+                    <div class="message-time">${formatDate(message.timestamp)}</div>
+                    ${isAdminMode ? `<button class="delete-btn" onclick="deleteMessage('${message.id}')">×</button>` : ''}
+                `;
+                
+                if (isAdminMode) {
+                    const deleteBtn = messageDiv.querySelector('.delete-btn');
+                    if (deleteBtn) deleteBtn.style.display = 'block';
+                }
+                
+                messagesDiv.appendChild(messageDiv);
+            });
         }
         
-        // Deployment status UI functions
-        function setDeploymentStatus(status) {
-            deploymentStatus = status;
-            updateSubmitButton();
-        }
-        
-        function updateSubmitButton() {
-            const submitBtn = document.getElementById('submitMessage');
-            switch (deploymentStatus) {
-                case 'submitting':
-                    submitBtn.textContent = 'Submitting... 🚀';
-                    submitBtn.disabled = true;
-                    break;
-                case 'deploying':
-                    submitBtn.textContent = 'Deploying... ⏳';
-                    submitBtn.disabled = true;
-                    break;
-                case 'error':
-                    submitBtn.textContent = 'Error - Try Again 😔';
-                    submitBtn.disabled = false;
-                    break;
-                default: // 'ready'
-                    submitBtn.textContent = 'Send Love 💖';
-                    submitBtn.disabled = false;
+        // === GITHUB INTEGRATION ===
+        async function commitMessagesToGitHub() {
+            if (!githubToken) {
+                throw new Error('GitHub token not provided');
+            }
+            
+            try {
+                // Get current file content
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.status}`);
+                }
+                
+                const fileData = await response.json();
+                const currentContent = atob(fileData.content);
+                
+                // Update the messages array in the HTML content
+                const messagesArrayRegex = /let messages = \[.*?\];/s;
+                const newMessagesArray = `let messages = ${JSON.stringify(messages, null, 12)};`;
+                const updatedContent = currentContent.replace(messagesArrayRegex, newMessagesArray);
+                
+                // Commit the updated file
+                const commitResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Update messages - ${messages.length} total messages`,
+                        content: btoa(updatedContent),
+                        sha: fileData.sha
+                    })
+                });
+                
+                if (!commitResponse.ok) {
+                    throw new Error(`GitHub commit error: ${commitResponse.status}`);
+                }
+                
+                showStatus('Messages synced! GitHub Pages will update in ~1 minute.', 'success');
+                
+            } catch (error) {
+                console.error('GitHub sync error:', error);
+                throw error;
             }
         }
         
-        function showDeploymentNotification(message) {
-            // Create floating notification
-            const notification = document.createElement('div');
-            notification.innerHTML = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: rgba(255, 215, 0, 0.9);
-                color: #333;
-                padding: 15px 20px;
-                border-radius: 25px;
-                font-weight: bold;
-                z-index: 10000;
-                animation: slideInRight 0.5s ease-out;
-                max-width: 300px;
-                text-align: center;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            `;
+        // === ADMIN FUNCTIONS ===
+        function toggleAdmin() {
+            const passwordInput = document.getElementById('adminPassword');
+            const toggleBtn = document.getElementById('adminToggle');
+            const logoutBtn = document.getElementById('adminLogout');
             
-            document.body.appendChild(notification);
+            if (isAdminMode) {
+                logoutAdmin();
+                return;
+            }
             
-            // Remove notification after 5 seconds
+            if (passwordInput.style.display === 'none') {
+                passwordInput.style.display = 'inline-block';
+                toggleBtn.textContent = 'Login';
+                passwordInput.focus();
+            } else {
+                const password = passwordInput.value;
+                
+                if (password === 'olivia2024') {
+                    isAdminMode = true;
+                    passwordInput.style.display = 'none';
+                    toggleBtn.style.display = 'none';
+                    logoutBtn.style.display = 'inline-block';
+                    
+                    displayMessages(); // Refresh to show delete buttons
+                    showStatus('Admin mode: ON | GitHub sync: ENABLED', 'success');
+                } else {
+                    showStatus('Incorrect password!', 'error');
+                    passwordInput.value = '';
+                }
+            }
+        }
+        
+        function logoutAdmin() {
+            isAdminMode = false;
+            
+            const passwordInput = document.getElementById('adminPassword');
+            const toggleBtn = document.getElementById('adminToggle');
+            const logoutBtn = document.getElementById('adminLogout');
+            
+            passwordInput.style.display = 'none';
+            passwordInput.value = '';
+            toggleBtn.style.display = 'inline-block';
+            toggleBtn.textContent = 'Admin Login';
+            logoutBtn.style.display = 'none';
+            
+            displayMessages(); // Refresh to hide delete buttons
+            showStatus('Admin mode: OFF', 'info');
+        }
+        
+        // === UTILITY FUNCTIONS ===
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        
+        // === SPARKLE EFFECTS ===
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.innerHTML = '✨';
+            sparkle.style.position = 'fixed';
+            sparkle.style.left = Math.random() * window.innerWidth + 'px';
+            sparkle.style.top = Math.random() * window.innerHeight + 'px';
+            sparkle.style.fontSize = '20px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.animation = 'sparkle 2s linear forwards';
+            document.body.appendChild(sparkle);
+            
             setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.style.animation = 'slideOutRight 0.5s ease-in';
-                    setTimeout(() => notification.remove(), 500);
-                }
-            }, 5000);
+                sparkle.remove();
+            }, 2000);
         }
         
-        function showDeploymentSuccess() {
-            showDeploymentNotification('Message deployed successfully! ✨ All devices now see your message!');
-        }
-        
-        // Add CSS for notifications
-        const notificationStyle = document.createElement('style');
-        notificationStyle.textContent = `
-            @keyframes slideInRight {
-                from {
-                    opacity: 0;
-                    transform: translateX(100px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
+        function createFloatingEmoji() {
+            const emojis = ['🎉', '💖', '🌟', '💫', '🦋', '🌸', '💕', '✨'];
+            const emoji = document.createElement('div');
+            emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.className = 'floating-emoji';
+            emoji.style.left = Math.random() * window.innerWidth + 'px';
+            emoji.style.top = window.innerHeight + 'px';
+            document.body.appendChild(emoji);
             
-            @keyframes slideOutRight {
-                from {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-                to {
-                    opacity: 0;
-                    transform: translateX(100px);
-                }
-            }
-        `;
-        document.head.appendChild(notificationStyle);
+            setTimeout(() => emoji.remove(), 3000);
+        }
         
-        // Initialize message board
+        // === INITIALIZATION ===
         document.addEventListener('DOMContentLoaded', function() {
-            // Load any saved GitHub token
-            loadGitHubToken();
+            // Load messages from localStorage as fallback
+            const savedMessages = localStorage.getItem('bachelorette_messages');
+            if (savedMessages && messages.length === 0) {
+                try {
+                    messages = JSON.parse(savedMessages);
+                } catch (e) {
+                    console.error('Error loading saved messages:', e);
+                }
+            }
             
-            // Display hardcoded messages immediately
             displayMessages();
             
-            // Add submit button event listener
-            document.getElementById('submitMessage').addEventListener('click', submitMessage);
+            // Initialize audio context on first user interaction
+            document.addEventListener('click', initAudio, { once: true });
+            document.addEventListener('touchstart', initAudio, { once: true });
             
-            // Add enter key support for form
-            document.getElementById('userName').addEventListener('keypress', function(e) {
+            // Handle Enter key in admin password field
+            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    document.getElementById('userMessage').focus();
+                    toggleAdmin();
                 }
             });
             
-            document.getElementById('userMessage').addEventListener('keypress', function(e) {
+            // Handle Enter key in message form
+            document.getElementById('messageText').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     submitMessage();
                 }
             });
-            
-            // Show initial info about GitHub-powered sync
-            console.log('🎉 Bachelorette message board ready!');
-            console.log('💡 Messages are stored directly in the HTML code via GitHub commits');
-            console.log('🚀 New messages auto-deploy to all devices in ~30-60 seconds');
         });
+        
+        // Create sparkles and floating emojis periodically
+        setInterval(createSparkle, 1000);
+        setInterval(createFloatingEmoji, 3000);
+        
     </script>
 </body>
 </html>
