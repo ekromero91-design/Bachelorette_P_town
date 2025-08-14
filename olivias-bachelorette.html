@@ -210,6 +210,179 @@
             z-index: 1000;
         }
         
+        /* Message Board Styles */
+        .message-board-section {
+            width: 100%;
+            max-width: 600px;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .message-title {
+            color: #FFD700;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        .message-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .message-form input, .message-form textarea {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: none;
+        }
+        
+        .message-form input:focus, .message-form textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .submit-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #FF6B9D, #FF8FB3);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: center;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .admin-toggle {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+        
+        .admin-toggle:hover {
+            opacity: 1;
+        }
+        
+        .admin-password {
+            margin: 1rem 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        .admin-password input {
+            padding: 8px 12px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 15px;
+        }
+        
+        .admin-password button {
+            padding: 8px 16px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        
+        .messages-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+        
+        .message-item {
+            background: rgba(255, 255, 255, 0.9);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: left;
+            animation: messageSlideIn 0.5s ease-out;
+            position: relative;
+        }
+        
+        .message-sender {
+            font-weight: bold;
+            color: #FF6B9D;
+            margin-bottom: 5px;
+        }
+        
+        .message-content {
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .message-time {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .admin-mode .delete-btn {
+            display: block;
+        }
+        
+        .loading-message {
+            color: #FFE5CC;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.2rem;
@@ -234,6 +407,9 @@
             }
         }
     </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
     <h1>Welcome to Olivia's<br>Bachelorette Extravaganza</h1>
@@ -270,6 +446,30 @@
     
     <div class="instructions">
         💸 Just enter the amount from the button you clicked! 💸
+    </div>
+    
+    <!-- Message Board Section -->
+    <div class="message-board-section">
+        <h2 class="message-title">💕 Messages for Olivia 💕</h2>
+        
+        <!-- Message Form -->
+        <div class="message-form">
+            <input type="text" id="userName" placeholder="Your name" maxlength="20">
+            <textarea id="userMessage" placeholder="Leave a sweet message for the bride! ✨" maxlength="150" rows="2"></textarea>
+            <button id="submitMessage" class="submit-btn">Send Love 💖</button>
+        </div>
+        
+        <!-- Admin Toggle (Hidden by default) -->
+        <div class="admin-toggle" onclick="toggleAdmin()" title="Admin Access">🔧</div>
+        <div id="adminPassword" class="admin-password" style="display: none;">
+            <input type="password" id="adminPass" placeholder="Admin password">
+            <button onclick="checkAdmin()">Login</button>
+        </div>
+        
+        <!-- Messages Display -->
+        <div id="messagesContainer" class="messages-container">
+            <div class="loading-message">Loading messages... 💫</div>
+        </div>
     </div>
     
     <script>
@@ -456,6 +656,137 @@
         // Initial burst of emojis
         for(let i = 0; i < 5; i++) {
             setTimeout(createFloatingEmoji, i * 500);
+        }
+        
+        // Message Board Functionality
+        let isAdminMode = false;
+        const ADMIN_PASSWORD = 'olivia2024';
+        
+        // Initialize Firebase (demo setup - replace with your config)
+        const firebaseConfig = {
+            // Using a simple demo setup for now
+            demoMode: true
+        };
+        
+        // Simple local storage for demo (replace with Firebase later)
+        let messages = JSON.parse(localStorage.getItem('bacheloretteMessages') || '[]');
+        
+        function toggleAdmin() {
+            const adminDiv = document.getElementById('adminPassword');
+            adminDiv.style.display = adminDiv.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function checkAdmin() {
+            const password = document.getElementById('adminPass').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdminMode = true;
+                document.getElementById('adminPassword').style.display = 'none';
+                document.getElementById('adminPass').value = '';
+                document.body.classList.add('admin-mode');
+                displayMessages();
+                alert('Admin mode activated! You can now delete messages.');
+            } else {
+                alert('Incorrect password');
+            }
+        }
+        
+        function submitMessage() {
+            const name = document.getElementById('userName').value.trim();
+            const message = document.getElementById('userMessage').value.trim();
+            
+            if (!name || !message) {
+                alert('Please enter both your name and a message!');
+                return;
+            }
+            
+            const newMessage = {
+                id: Date.now().toString(),
+                name: name.substring(0, 20),
+                message: message.substring(0, 150),
+                timestamp: new Date().toLocaleString()
+            };
+            
+            messages.unshift(newMessage);
+            localStorage.setItem('bacheloretteMessages', JSON.stringify(messages));
+            
+            // Clear form
+            document.getElementById('userName').value = '';
+            document.getElementById('userMessage').value = '';
+            
+            // Show success and refresh display
+            playCheerSound();
+            setTimeout(playBubblesSound, 200);
+            displayMessages();
+            
+            // Create celebration effect
+            createFloatingEmoji();
+        }
+        
+        function deleteMessage(messageId) {
+            if (!isAdminMode) return;
+            
+            messages = messages.filter(msg => msg.id !== messageId);
+            localStorage.setItem('bacheloretteMessages', JSON.stringify(messages));
+            displayMessages();
+        }
+        
+        function displayMessages() {
+            const container = document.getElementById('messagesContainer');
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<div class="loading-message">No messages yet! Be the first to send love to Olivia! 💕</div>';
+                return;
+            }
+            
+            container.innerHTML = messages.map(msg => `
+                <div class="message-item">
+                    <div class="message-sender">${msg.name}</div>
+                    <div class="message-content">${msg.message}</div>
+                    <div class="message-time">${msg.timestamp}</div>
+                    <button class="delete-btn" onclick="deleteMessage('${msg.id}')" title="Delete message">×</button>
+                </div>
+            `).join('');
+        }
+        
+        // Initialize message board
+        document.addEventListener('DOMContentLoaded', function() {
+            displayMessages();
+            
+            // Add submit button event listener
+            document.getElementById('submitMessage').addEventListener('click', submitMessage);
+            
+            // Add enter key support for form
+            document.getElementById('userName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('userMessage').focus();
+                }
+            });
+            
+            document.getElementById('userMessage').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    submitMessage();
+                }
+            });
+        });
+        
+        // Add some demo messages if none exist
+        if (messages.length === 0) {
+            messages = [
+                {
+                    id: '1',
+                    name: 'Sarah',
+                    message: "OMG Olivia! Can't wait to celebrate you tonight! You're going to be the most beautiful bride! 💖",
+                    timestamp: new Date(Date.now() - 300000).toLocaleString()
+                },
+                {
+                    id: '2', 
+                    name: 'Mom',
+                    message: "So proud of you my beautiful daughter! Have the most amazing night with your girls! Love you! 🥂",
+                    timestamp: new Date(Date.now() - 600000).toLocaleString()
+                }
+            ];
+            localStorage.setItem('bacheloretteMessages', JSON.stringify(messages));
         }
     </script>
 </body>
