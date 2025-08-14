@@ -318,17 +318,11 @@
         let isAdminMode = false;
         let audioContext = null;
         
-        // GitHub repository info
-        const GITHUB_CONFIG = {
-            owner: 'ekromero91-design',
-            repo: 'Bachelorette_P_town',
-            filePath: 'olivias-bachelorette.html'
-        };
+        // JSONBin.io cloud storage for real-time sync
+        const STORAGE_URL = 'https://api.jsonbin.io/v3/b/689e35aed0ea881f405952bb';
+        const STORAGE_KEY = '$2a$10$LaWJW/Qe4t10OEBkp4n.1OzXrB0xVhIMQRXGAGhQVy4hCSQfJnV8q';
         
-        // Embedded GitHub token for seamless message storage in code
-        const githubToken = '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';
-        
-        // Messages array - stored directly in code and updated via GitHub commits!
+        // Messages array - synced across all devices!
         let messages = [];
         
         // Profanity filter
@@ -483,25 +477,26 @@
             // Add to local array
             messages.unshift(message);
             
-            // Clear form
+            // Clear form immediately for better UX
             authorInput.value = '';
             textInput.value = '';
             
             // Update display
             displayMessages();
             
-            // Try to sync to GitHub if admin has provided token
-            if (githubToken) {
-                try {
-                    showStatus('Syncing message across devices...', 'info');
-                    await commitMessagesToGitHub();
-                    showStatus('Message saved and synced! 💕', 'success');
-                } catch (error) {
-                    console.error('GitHub sync failed:', error);
-                    showStatus('Message saved locally. GitHub sync failed - check token.', 'error');
-                }
-            } else {
-                showStatus('Message saved locally! (Admin: add GitHub token for cross-device sync)', 'success');
+            // Play celebration effects
+            initAudio();
+            playCheerSound();
+            createFloatingEmoji();
+            
+            // Sync to cloud storage
+            try {
+                showStatus('Syncing message across devices...', 'info');
+                await syncMessagesToCloud();
+                showStatus('Message saved and synced! 💕', 'success');
+            } catch (error) {
+                console.error('Cloud sync failed:', error);
+                showStatus('Message saved locally. Will sync when online.', 'error');
                 // Save to localStorage as backup
                 localStorage.setItem('bachelorette_messages', JSON.stringify(messages));
             }
@@ -513,18 +508,14 @@
             messages = messages.filter(msg => msg.id !== messageId);
             displayMessages();
             
-            if (githubToken) {
-                try {
-                    showStatus('Deleting message...', 'info');
-                    await commitMessagesToGitHub();
-                    showStatus('Message deleted and synced!', 'success');
-                } catch (error) {
-                    console.error('GitHub sync failed:', error);
-                    showStatus('Message deleted locally. GitHub sync failed.', 'error');
-                }
-            } else {
+            try {
+                showStatus('Deleting message...', 'info');
+                await syncMessagesToCloud();
+                showStatus('Message deleted and synced!', 'success');
+            } catch (error) {
+                console.error('Cloud sync failed:', error);
+                showStatus('Message deleted locally. Will sync when online.', 'error');
                 localStorage.setItem('bachelorette_messages', JSON.stringify(messages));
-                showStatus('Message deleted locally!', 'success');
             }
         }
         
@@ -556,57 +547,64 @@
             });
         }
         
-        // === GITHUB INTEGRATION ===
-        async function commitMessagesToGitHub() {
-            if (!githubToken) {
-                throw new Error('GitHub token not provided');
-            }
-            
+        // === CLOUD STORAGE INTEGRATION ===
+        async function syncMessagesToCloud() {
             try {
-                // Get current file content
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
+                const response = await fetch(STORAGE_URL, {
+                    method: 'PUT',
                     headers: {
-                        'Authorization': `token ${githubToken}`,
-                        'Accept': 'application/vnd.github.v3+json'
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': STORAGE_KEY
+                    },
+                    body: JSON.stringify(messages)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Cloud storage error: ${response.status}`);
+                }
+                
+                // Also save to localStorage as backup
+                localStorage.setItem('bachelorette_messages', JSON.stringify(messages));
+                
+            } catch (error) {
+                console.error('Cloud sync error:', error);
+                throw error;
+            }
+        }
+        
+        async function loadMessagesFromCloud() {
+            try {
+                const response = await fetch(STORAGE_URL, {
+                    headers: {
+                        'X-Master-Key': STORAGE_KEY
                     }
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`GitHub API error: ${response.status}`);
+                    throw new Error(`Cloud storage error: ${response.status}`);
                 }
                 
-                const fileData = await response.json();
-                const currentContent = atob(fileData.content);
-                
-                // Update the messages array in the HTML content
-                const messagesArrayRegex = /let messages = \[.*?\];/s;
-                const newMessagesArray = `let messages = ${JSON.stringify(messages, null, 12)};`;
-                const updatedContent = currentContent.replace(messagesArrayRegex, newMessagesArray);
-                
-                // Commit the updated file
-                const commitResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubToken}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: `Update messages - ${messages.length} total messages`,
-                        content: btoa(updatedContent),
-                        sha: fileData.sha
-                    })
-                });
-                
-                if (!commitResponse.ok) {
-                    throw new Error(`GitHub commit error: ${commitResponse.status}`);
+                const data = await response.json();
+                if (data.record && Array.isArray(data.record)) {
+                    messages = data.record;
+                    localStorage.setItem('bachelorette_messages', JSON.stringify(messages));
+                    displayMessages();
+                    console.log('Messages loaded from cloud storage');
                 }
-                
-                showStatus('Messages synced! GitHub Pages will update in ~1 minute.', 'success');
                 
             } catch (error) {
-                console.error('GitHub sync error:', error);
-                throw error;
+                console.error('Failed to load from cloud storage:', error);
+                // Fall back to localStorage
+                const savedMessages = localStorage.getItem('bachelorette_messages');
+                if (savedMessages) {
+                    try {
+                        messages = JSON.parse(savedMessages);
+                        displayMessages();
+                        console.log('Messages loaded from localStorage backup');
+                    } catch (e) {
+                        console.error('Error loading saved messages:', e);
+                    }
+                }
             }
         }
         
@@ -635,7 +633,7 @@
                     logoutBtn.style.display = 'inline-block';
                     
                     displayMessages(); // Refresh to show delete buttons
-                    showStatus('Admin mode: ON | GitHub sync: ENABLED', 'success');
+                    showStatus('Admin mode: ON | Cloud sync: ENABLED', 'success');
                 } else {
                     showStatus('Incorrect password!', 'error');
                     passwordInput.value = '';
@@ -703,17 +701,8 @@
         
         // === INITIALIZATION ===
         document.addEventListener('DOMContentLoaded', function() {
-            // Load messages from localStorage as fallback
-            const savedMessages = localStorage.getItem('bachelorette_messages');
-            if (savedMessages && messages.length === 0) {
-                try {
-                    messages = JSON.parse(savedMessages);
-                } catch (e) {
-                    console.error('Error loading saved messages:', e);
-                }
-            }
-            
-            displayMessages();
+            // Try to load messages from cloud storage first
+            loadMessagesFromCloud();
             
             // Initialize audio context on first user interaction
             document.addEventListener('click', initAudio, { once: true });
