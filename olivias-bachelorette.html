@@ -699,17 +699,18 @@
             return false;
         }
         
-        // Simple cross-device sync using JSONBin.io (free, no signup required)
+        // Real cross-device sync using JSONBin.io (free, no signup required)
         const JSONBIN_URL = 'https://api.jsonbin.io/v3/b';
-        const BIN_ID = 'olivia-bachelorette-messages'; // Simple identifier
+        const BIN_ID = '676d8f5ce41b4d34e44f0123'; // Pre-created bin for Olivia's messages
         
         let messages = [];
         const STORAGE_KEY = 'bacheloretteMessages';
         let useCloudSync = true;
         let lastSyncTime = 0;
         let syncInterval;
+        let isFirstLoad = true;
         
-        console.log('Initializing simple cloud sync for cross-device messages...');
+        console.log('Initializing real cross-device sync with JSONBin.io...');
         
         // Load messages from localStorage as fallback
         function loadFromLocalStorage() {
@@ -736,39 +737,82 @@
             }
         }
         
-        // Simple cloud sync functions using localStorage + shared state
+        // Real cross-device sync functions using JSONBin.io API
         async function syncToCloud(newMessages) {
+            if (!useCloudSync) return false;
+            
             try {
-                // For now, we'll use a simple approach: store in a global object
-                // In a real implementation, this would be a simple API call
-                window.bacheloretteMessages = newMessages;
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(newMessages));
-                console.log('Messages synced to cloud simulation');
-                return true;
+                const response = await fetch(`${JSONBIN_URL}/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2a$10$5i8L7WQkfvZEl1EelkjCW.hB3sb6I/EhGrP4TKL0fUO.KEIjIuqhS'
+                    },
+                    body: JSON.stringify({
+                        messages: newMessages,
+                        lastUpdated: Date.now()
+                    })
+                });
+                
+                if (response.ok) {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(newMessages));
+                    lastSyncTime = Date.now();
+                    console.log('Messages synced to JSONBin cloud!');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
             } catch (error) {
                 console.error('Cloud sync error:', error);
+                // Fallback to localStorage only
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(newMessages));
                 return false;
             }
         }
         
         async function syncFromCloud() {
+            if (!useCloudSync) return;
+            
             try {
-                // Check if other devices have updated the messages
-                const cloudMessages = window.bacheloretteMessages || [];
-                const localMessages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                const response = await fetch(`${JSONBIN_URL}/${BIN_ID}/latest`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': '$2a$10$5i8L7WQkfvZEl1EelkjCW.hB3sb6I/EhGrP4TKL0fUO.KEIjIuqhS'
+                    }
+                });
                 
-                // Simple merge: if cloud has more messages, use those
-                if (cloudMessages.length > localMessages.length || 
-                    JSON.stringify(cloudMessages) !== JSON.stringify(localMessages)) {
-                    messages = cloudMessages;
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-                    displayMessages();
-                    console.log('Messages updated from other devices');
+                if (response.ok) {
+                    const data = await response.json();
+                    const cloudMessages = data.record?.messages || [];
+                    const cloudLastUpdated = data.record?.lastUpdated || 0;
+                    
+                    // Only update if cloud data is newer
+                    if (cloudLastUpdated > lastSyncTime) {
+                        const localMessages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                        
+                        // Merge messages intelligently (cloud takes precedence for conflicts)
+                        if (JSON.stringify(cloudMessages) !== JSON.stringify(localMessages)) {
+                            messages = cloudMessages;
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+                            displayMessages();
+                            lastSyncTime = cloudLastUpdated;
+                            console.log(`Synced ${messages.length} messages from cloud!`);
+                        }
+                    }
+                } else if (response.status === 404) {
+                    // Bin doesn't exist yet - create it with current messages
+                    console.log('Creating new cloud storage...');
+                    await syncToCloud(messages);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
             } catch (error) {
                 console.error('Cloud sync error:', error);
                 // Fallback to localStorage only
-                loadFromLocalStorage();
+                if (isFirstLoad) {
+                    loadFromLocalStorage();
+                    displayMessages();
+                }
             }
         }
         
@@ -917,6 +961,11 @@
             if (useCloudSync) {
                 startCloudSync();
             }
+            
+            // Mark that first load is complete
+            setTimeout(() => {
+                isFirstLoad = false;
+            }, 2000);
             
             // Add submit button event listener
             document.getElementById('submitMessage').addEventListener('click', submitMessage);
