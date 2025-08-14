@@ -312,55 +312,78 @@
             }, 8000);
         }
         
+        // Create global audio context
+        let audioContext = null;
+        
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Resume audio context for mobile (required by iOS Safari)
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            }
+            return audioContext;
+        }
+        
         // Create sound effects
         function playCheerSound() {
-            // Create multiple overlapping "cheer" sounds using Web Audio API
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Create a short celebratory beep
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            // Happy celebration frequency
-            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
-            oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.2);
-            
-            // Volume envelope for a "pop" sound
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.3);
+            try {
+                const ctx = initAudioContext();
+                if (!ctx) return;
+                
+                // Create a short celebratory beep
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                // Happy celebration frequency
+                oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+                oscillator.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.2);
+                
+                // Volume envelope for a "pop" sound
+                gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                
+                oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + 0.3);
+            } catch(e) {
+                console.log('Audio not supported');
+            }
         }
         
         function playBubblesSound() {
-            // Create champagne bubble sound
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            for(let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    // Bubble pop frequency
-                    oscillator.frequency.setValueAtTime(1000 + Math.random() * 500, audioContext.currentTime);
-                    oscillator.type = 'sine';
-                    
-                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.1);
-                }, i * 50);
+            try {
+                const ctx = initAudioContext();
+                if (!ctx) return;
+                
+                for(let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const oscillator = ctx.createOscillator();
+                        const gainNode = ctx.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(ctx.destination);
+                        
+                        // Bubble pop frequency
+                        oscillator.frequency.setValueAtTime(1000 + Math.random() * 500, ctx.currentTime);
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                        
+                        oscillator.start(ctx.currentTime);
+                        oscillator.stop(ctx.currentTime + 0.1);
+                    }, i * 50);
+                }
+            } catch(e) {
+                console.log('Audio not supported');
             }
         }
         
