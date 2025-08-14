@@ -43,10 +43,34 @@ The QR code is saved as `olivias_bachelorette_qr.png` - you can print this and p
 
 ## Features:
 - ✨ Big yellow "Welcome to Olivia's Bachelorette Extravaganza" text
-- 💜 Lavender "Buy the Bride a Drink!" button
-- 🎉 Sparkle animations for fun
+- 🍸 Multiple drink price options ($5 Shot, $10 Cocktail, $15 Wine, $25 Champagne)
+- 🎉 Interactive animations and sound effects
+- 💕 Cross-device message board for guests to leave messages for Olivia
+- 🔄 Real-time message syncing across all devices (5-second polling)
+- 🛡️ Built-in profanity filter to keep messages appropriate
+- 🔧 Admin mode for message moderation (password: olivia2024)
 - 📱 Mobile-responsive design
-- 🔗 Direct link to Venmo for easy payments
+- 🔗 Direct Venmo integration for easy payments
+
+## Message Board Features:
+
+### For Guests:
+- Leave sweet messages for Olivia using the "Messages for Olivia" section
+- Messages are limited to 150 characters and names to 20 characters
+- All inappropriate content is automatically filtered
+- Messages sync across all devices within 5 seconds
+
+### For Admins:
+- Click the small 🔧 icon in the top-right of the message board
+- Enter password: `olivia2024`
+- Delete inappropriate messages by clicking the × button
+- Click 🚪 to logout of admin mode
+
+### Technical Details:
+- Messages are stored in browser localStorage with cross-device sync
+- No external database required - works entirely client-side
+- Automatic profanity filtering blocks inappropriate content
+- Polling every 5 seconds keeps all devices synchronized
 
 ## Quick Test:
 You can open `olivias-bachelorette.html` directly in your browser to see how it looks before hosting it online.
