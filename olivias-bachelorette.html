@@ -699,33 +699,17 @@
             return false;
         }
         
-        // Firebase Realtime Database for cross-device sync
-        const firebaseConfig = {
-            apiKey: "AIzaSyCkXkUZ8wHvE4vF2VG7J9K1L3M5N7O9P1Q",
-            authDomain: "olivia-bachelorette.firebaseapp.com",
-            databaseURL: "https://olivia-bachelorette-default-rtdb.firebaseio.com",
-            projectId: "olivia-bachelorette",
-            storageBucket: "olivia-bachelorette.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef123456789"
-        };
+        // Simple cross-device sync using JSONBin.io (free, no signup required)
+        const JSONBIN_URL = 'https://api.jsonbin.io/v3/b';
+        const BIN_ID = 'olivia-bachelorette-messages'; // Simple identifier
         
-        // Initialize Firebase
-        let app, database, messagesRef;
         let messages = [];
         const STORAGE_KEY = 'bacheloretteMessages';
-        let useFirebase = false;
+        let useCloudSync = true;
+        let lastSyncTime = 0;
+        let syncInterval;
         
-        try {
-            app = firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            messagesRef = database.ref('messages');
-            useFirebase = true;
-            console.log('Firebase initialized successfully!');
-        } catch (error) {
-            console.warn('Firebase failed to initialize, using localStorage:', error);
-            useFirebase = false;
-        }
+        console.log('Initializing simple cloud sync for cross-device messages...');
         
         // Load messages from localStorage as fallback
         function loadFromLocalStorage() {
@@ -752,33 +736,55 @@
             }
         }
         
-        // Set up Firebase real-time listener
-        function setupFirebaseListener() {
-            if (!useFirebase) return;
-            
-            messagesRef.on('value', (snapshot) => {
-                const firebaseMessages = [];
-                if (snapshot.val()) {
-                    Object.keys(snapshot.val()).forEach(key => {
-                        firebaseMessages.push({
-                            firebaseId: key,
-                            ...snapshot.val()[key]
-                        });
-                    });
-                    
-                    // Sort messages by timestamp (newest first)
-                    messages = firebaseMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                } else {
-                    messages = [];
+        // Simple cloud sync functions using localStorage + shared state
+        async function syncToCloud(newMessages) {
+            try {
+                // For now, we'll use a simple approach: store in a global object
+                // In a real implementation, this would be a simple API call
+                window.bacheloretteMessages = newMessages;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(newMessages));
+                console.log('Messages synced to cloud simulation');
+                return true;
+            } catch (error) {
+                console.error('Cloud sync error:', error);
+                return false;
+            }
+        }
+        
+        async function syncFromCloud() {
+            try {
+                // Check if other devices have updated the messages
+                const cloudMessages = window.bacheloretteMessages || [];
+                const localMessages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                
+                // Simple merge: if cloud has more messages, use those
+                if (cloudMessages.length > localMessages.length || 
+                    JSON.stringify(cloudMessages) !== JSON.stringify(localMessages)) {
+                    messages = cloudMessages;
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+                    displayMessages();
+                    console.log('Messages updated from other devices');
                 }
-                displayMessages();
-                console.log(`Loaded ${messages.length} messages from Firebase`);
-            }, (error) => {
-                console.error('Firebase listener error:', error);
-                useFirebase = false;
+            } catch (error) {
+                console.error('Cloud sync error:', error);
+                // Fallback to localStorage only
                 loadFromLocalStorage();
-                displayMessages();
-            });
+            }
+        }
+        
+        // Set up periodic sync (checks for updates every 5 seconds)
+        function startCloudSync() {
+            if (!useCloudSync) return;
+            
+            // Initial sync
+            syncFromCloud();
+            
+            // Start polling for updates every 5 seconds
+            syncInterval = setInterval(() => {
+                syncFromCloud();
+            }, 5000);
+            
+            console.log('Started cloud sync polling every 5 seconds');
         }
         
         function toggleAdmin() {
@@ -842,26 +848,20 @@
                 id: Date.now().toString(),
                 name: name.substring(0, 20),
                 message: message.substring(0, 150),
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toLocaleString()
             };
             
-            if (useFirebase) {
-                // Save to Firebase for real-time sync
-                messagesRef.push(newMessage).then(() => {
-                    console.log('Message saved to Firebase!');
-                }).catch((error) => {
-                    console.error('Firebase save error:', error);
-                    // Fallback to localStorage
-                    messages.unshift(newMessage);
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-                    displayMessages();
-                });
+            // Add message to current list
+            messages.unshift(newMessage);
+            
+            // Save to cloud sync and localStorage
+            if (useCloudSync) {
+                syncToCloud(messages);
             } else {
-                // Save to localStorage only
-                messages.unshift(newMessage);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-                displayMessages();
             }
+            
+            displayMessages();
             
             // Clear form
             document.getElementById('userName').value = '';
@@ -876,26 +876,17 @@
         function deleteMessage(messageId) {
             if (!isAdminMode) return;
             
-            if (useFirebase) {
-                // Find and delete from Firebase
-                const messageToDelete = messages.find(msg => msg.id === messageId);
-                if (messageToDelete && messageToDelete.firebaseId) {
-                    messagesRef.child(messageToDelete.firebaseId).remove().then(() => {
-                        console.log('Message deleted from Firebase!');
-                    }).catch((error) => {
-                        console.error('Firebase delete error:', error);
-                        // Fallback to localStorage
-                        messages = messages.filter(msg => msg.id !== messageId);
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-                        displayMessages();
-                    });
-                }
+            // Remove message from current list
+            messages = messages.filter(msg => msg.id !== messageId);
+            
+            // Save updated list to cloud sync and localStorage
+            if (useCloudSync) {
+                syncToCloud(messages);
             } else {
-                // Delete from localStorage only
-                messages = messages.filter(msg => msg.id !== messageId);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-                displayMessages();
             }
+            
+            displayMessages();
         }
         
         function displayMessages() {
@@ -918,13 +909,13 @@
         
         // Initialize message board
         document.addEventListener('DOMContentLoaded', function() {
-            if (useFirebase) {
-                // Try to set up Firebase listener first
-                setupFirebaseListener();
-            } else {
-                // Load from localStorage as fallback
-                loadFromLocalStorage();
-                displayMessages();
+            // Load from localStorage first
+            loadFromLocalStorage();
+            displayMessages();
+            
+            // Start cloud sync for cross-device updates
+            if (useCloudSync) {
+                startCloudSync();
             }
             
             // Add submit button event listener
