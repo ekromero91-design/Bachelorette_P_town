@@ -312,9 +312,68 @@
             }, 8000);
         }
         
+        // Create sound effects
+        function playCheerSound() {
+            // Create multiple overlapping "cheer" sounds using Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create a short celebratory beep
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Happy celebration frequency
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
+            oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.2);
+            
+            // Volume envelope for a "pop" sound
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+        
+        function playBubblesSound() {
+            // Create champagne bubble sound
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            for(let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    // Bubble pop frequency
+                    oscillator.frequency.setValueAtTime(1000 + Math.random() * 500, audioContext.currentTime);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                }, i * 50);
+            }
+        }
+        
         // Button click effects
         document.querySelectorAll('.buy-drink-btn').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function(e) {
+                // Prevent default to ensure sound plays before navigation
+                e.preventDefault();
+                
+                // Play sound effects
+                playCheerSound();
+                setTimeout(() => playBubblesSound(), 100);
+                
                 // Create explosion of hearts
                 for(let i = 0; i < 8; i++) {
                     setTimeout(() => {
@@ -337,6 +396,11 @@
                         }, 1500);
                     }, i * 100);
                 }
+                
+                // Navigate to Venmo after sound and animation
+                setTimeout(() => {
+                    window.open(button.href, '_blank');
+                }, 500);
             });
         });
         
