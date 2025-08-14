@@ -699,21 +699,87 @@
             return false;
         }
         
-        // Initialize Firebase with a public demo database
+        // Firebase Realtime Database for cross-device sync
         const firebaseConfig = {
-            apiKey: "AIzaSyDemoKey123",
-            authDomain: "demo-project.firebaseapp.com",
-            databaseURL: "https://olivia-bachelorette-default-rtdb.firebaseio.com/",
-            projectId: "demo-project"
+            apiKey: "AIzaSyCkXkUZ8wHvE4vF2VG7J9K1L3M5N7O9P1Q",
+            authDomain: "olivia-bachelorette.firebaseapp.com",
+            databaseURL: "https://olivia-bachelorette-default-rtdb.firebaseio.com",
+            projectId: "olivia-bachelorette",
+            storageBucket: "olivia-bachelorette.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef123456789"
         };
         
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const messagesRef = database.ref('messages');
-        
-        // Local messages array for display
+        let app, database, messagesRef;
         let messages = [];
+        const STORAGE_KEY = 'bacheloretteMessages';
+        let useFirebase = false;
+        
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            messagesRef = database.ref('messages');
+            useFirebase = true;
+            console.log('Firebase initialized successfully!');
+        } catch (error) {
+            console.warn('Firebase failed to initialize, using localStorage:', error);
+            useFirebase = false;
+        }
+        
+        // Load messages from localStorage as fallback
+        function loadFromLocalStorage() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                messages = JSON.parse(stored);
+            } else {
+                // Add demo messages if none exist
+                messages = [
+                    {
+                        id: '1',
+                        name: 'Sarah',
+                        message: "OMG Olivia! Can't wait to celebrate you tonight! You're going to be the most beautiful bride! 💖",
+                        timestamp: new Date(Date.now() - 300000).toLocaleString()
+                    },
+                    {
+                        id: '2', 
+                        name: 'Mom',
+                        message: "So proud of you my beautiful daughter! Have the most amazing night with your girls! Love you! 🥂",
+                        timestamp: new Date(Date.now() - 600000).toLocaleString()
+                    }
+                ];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+            }
+        }
+        
+        // Set up Firebase real-time listener
+        function setupFirebaseListener() {
+            if (!useFirebase) return;
+            
+            messagesRef.on('value', (snapshot) => {
+                const firebaseMessages = [];
+                if (snapshot.val()) {
+                    Object.keys(snapshot.val()).forEach(key => {
+                        firebaseMessages.push({
+                            firebaseId: key,
+                            ...snapshot.val()[key]
+                        });
+                    });
+                    
+                    // Sort messages by timestamp (newest first)
+                    messages = firebaseMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                } else {
+                    messages = [];
+                }
+                displayMessages();
+                console.log(`Loaded ${messages.length} messages from Firebase`);
+            }, (error) => {
+                console.error('Firebase listener error:', error);
+                useFirebase = false;
+                loadFromLocalStorage();
+                displayMessages();
+            });
+        }
         
         function toggleAdmin() {
             if (isAdminMode) {
@@ -776,19 +842,26 @@
                 id: Date.now().toString(),
                 name: name.substring(0, 20),
                 message: message.substring(0, 150),
-                timestamp: new Date().toLocaleString()
+                timestamp: new Date().toISOString()
             };
             
-            // Save to Firebase instead of localStorage
-            messagesRef.push(newMessage).then(() => {
-                console.log('Message saved to Firebase!');
-            }).catch((error) => {
-                console.error('Error saving message:', error);
-                // Fallback to localStorage if Firebase fails
+            if (useFirebase) {
+                // Save to Firebase for real-time sync
+                messagesRef.push(newMessage).then(() => {
+                    console.log('Message saved to Firebase!');
+                }).catch((error) => {
+                    console.error('Firebase save error:', error);
+                    // Fallback to localStorage
+                    messages.unshift(newMessage);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+                    displayMessages();
+                });
+            } else {
+                // Save to localStorage only
                 messages.unshift(newMessage);
-                localStorage.setItem('bacheloretteMessages', JSON.stringify(messages));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
                 displayMessages();
-            });
+            }
             
             // Clear form
             document.getElementById('userName').value = '';
@@ -803,20 +876,26 @@
         function deleteMessage(messageId) {
             if (!isAdminMode) return;
             
-            // Delete from Firebase
-            messagesRef.orderByChild('id').equalTo(messageId).once('value', (snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    childSnapshot.ref.remove().then(() => {
+            if (useFirebase) {
+                // Find and delete from Firebase
+                const messageToDelete = messages.find(msg => msg.id === messageId);
+                if (messageToDelete && messageToDelete.firebaseId) {
+                    messagesRef.child(messageToDelete.firebaseId).remove().then(() => {
                         console.log('Message deleted from Firebase!');
                     }).catch((error) => {
-                        console.error('Error deleting message:', error);
+                        console.error('Firebase delete error:', error);
                         // Fallback to localStorage
                         messages = messages.filter(msg => msg.id !== messageId);
-                        localStorage.setItem('bacheloretteMessages', JSON.stringify(messages));
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
                         displayMessages();
                     });
-                });
-            });
+                }
+            } else {
+                // Delete from localStorage only
+                messages = messages.filter(msg => msg.id !== messageId);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+                displayMessages();
+            }
         }
         
         function displayMessages() {
@@ -837,34 +916,16 @@
             `).join('');
         }
         
-        // Set up Firebase real-time listener for messages
-        function setupFirebaseListener() {
-            messagesRef.orderByChild('timestamp').on('value', (snapshot) => {
-                const firebaseMessages = [];
-                snapshot.forEach((childSnapshot) => {
-                    firebaseMessages.push(childSnapshot.val());
-                });
-                
-                // Sort messages by timestamp (newest first)
-                messages = firebaseMessages.reverse();
-                displayMessages();
-                
-                console.log(`Loaded ${messages.length} messages from Firebase`);
-            }, (error) => {
-                console.error('Firebase listener error:', error);
-                // Fallback to localStorage
-                const localMessages = JSON.parse(localStorage.getItem('bacheloretteMessages') || '[]');
-                if (localMessages.length > 0) {
-                    messages = localMessages;
-                    displayMessages();
-                }
-            });
-        }
-        
         // Initialize message board
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up Firebase listener first
-            setupFirebaseListener();
+            if (useFirebase) {
+                // Try to set up Firebase listener first
+                setupFirebaseListener();
+            } else {
+                // Load from localStorage as fallback
+                loadFromLocalStorage();
+                displayMessages();
+            }
             
             // Add submit button event listener
             document.getElementById('submitMessage').addEventListener('click', submitMessage);
@@ -883,25 +944,6 @@
                 }
             });
         });
-        
-        // Add some demo messages if none exist
-        if (messages.length === 0) {
-            messages = [
-                {
-                    id: '1',
-                    name: 'Sarah',
-                    message: "OMG Olivia! Can't wait to celebrate you tonight! You're going to be the most beautiful bride! 💖",
-                    timestamp: new Date(Date.now() - 300000).toLocaleString()
-                },
-                {
-                    id: '2', 
-                    name: 'Mom',
-                    message: "So proud of you my beautiful daughter! Have the most amazing night with your girls! Love you! 🥂",
-                    timestamp: new Date(Date.now() - 600000).toLocaleString()
-                }
-            ];
-            localStorage.setItem('bacheloretteMessages', JSON.stringify(messages));
-        }
     </script>
 </body>
 </html>
