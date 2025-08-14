@@ -16,6 +16,7 @@
             align-items: center;
             min-height: 100vh;
             text-align: center;
+            overflow-x: hidden;
         }
         
         h1 {
@@ -25,14 +26,23 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             margin-bottom: 2rem;
             line-height: 1.2;
+            animation: bounce 2s infinite;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 2rem;
+            max-width: 600px;
         }
         
         .buy-drink-btn {
-            background-color: #B19CD9;
             color: white;
             border: none;
-            padding: 20px 40px;
-            font-size: 1.5rem;
+            padding: 15px 25px;
+            font-size: 1.2rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
@@ -40,64 +50,284 @@
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            position: relative;
+            overflow: hidden;
+            animation: glow 3s infinite;
+        }
+        
+        .buy-drink-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        .btn-small {
+            background: linear-gradient(135deg, #B19CD9, #9B7FD9);
+        }
+        
+        .btn-medium {
+            background: linear-gradient(135deg, #FF6B9D, #FF8FB3);
+        }
+        
+        .btn-large {
+            background: linear-gradient(135deg, #4ECDC4, #44B3A3);
+        }
+        
+        .btn-premium {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            animation: pulse 2s infinite;
         }
         
         .buy-drink-btn:hover {
-            background-color: #A08BD4;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            color: #FFE5CC;
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @keyframes glow {
+            0% {
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(255,255,255,0.4);
+            }
+            100% {
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+            66% {
+                transform: translateY(10px) rotate(-3deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+        
+        .floating-emoji {
+            position: fixed;
+            font-size: 2rem;
+            animation: float 4s infinite;
+            pointer-events: none;
+            z-index: 1000;
         }
         
         @media (max-width: 768px) {
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
                 padding: 0 20px;
             }
             
+            .subtitle {
+                font-size: 1.1rem;
+                padding: 0 20px;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            
             .buy-drink-btn {
-                font-size: 1.2rem;
-                padding: 15px 30px;
+                font-size: 1.1rem;
+                padding: 12px 20px;
+                width: 200px;
             }
         }
     </style>
 </head>
 <body>
     <h1>Welcome to Olivia's<br>Bachelorette Extravaganza</h1>
-    <a href="https://venmo.com/u/shewerewolf" class="buy-drink-btn" target="_blank">
-        Buy the Bride a Drink! 🍹
-    </a>
+    
+    <div class="subtitle">
+        🥂 Help us celebrate the bride-to-be! 🥂
+    </div>
+    
+    <div class="buttons-container">
+        <a href="https://venmo.com/u/shewerewolf?txn=pay&amount=5&note=Cheers%20to%20Olivia!%20🍸" class="buy-drink-btn btn-small" target="_blank">
+            $5 - Shot! 🥃
+        </a>
+        
+        <a href="https://venmo.com/u/shewerewolf?txn=pay&amount=10&note=Cocktail%20for%20the%20bride!%20🍹" class="buy-drink-btn btn-medium" target="_blank">
+            $10 - Cocktail! 🍹
+        </a>
+        
+        <a href="https://venmo.com/u/shewerewolf?txn=pay&amount=15&note=Wine%20for%20Olivia!%20🍷" class="buy-drink-btn btn-large" target="_blank">
+            $15 - Wine! 🍷
+        </a>
+        
+        <a href="https://venmo.com/u/shewerewolf?txn=pay&amount=25&note=Bottle%20of%20bubbly%20for%20the%20bride!%20🍾" class="buy-drink-btn btn-premium" target="_blank">
+            $25 - Champagne! 🍾
+        </a>
+        
+        <a href="https://venmo.com/u/shewerewolf?txn=pay&note=Custom%20amount%20for%20Olivia's%20bachelorette!%20🎉" class="buy-drink-btn btn-small" target="_blank">
+            Custom Amount 💝
+        </a>
+    </div>
     
     <script>
-        // Add some sparkle effect
+        // Enhanced sparkle effect
         function createSparkle() {
+            const sparkles = ['✨', '🌟', '💫', '⭐', '🎊'];
             const sparkle = document.createElement('div');
-            sparkle.innerHTML = '✨';
+            sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
             sparkle.style.position = 'fixed';
             sparkle.style.left = Math.random() * window.innerWidth + 'px';
             sparkle.style.top = Math.random() * window.innerHeight + 'px';
-            sparkle.style.fontSize = '20px';
+            sparkle.style.fontSize = Math.random() * 20 + 15 + 'px';
             sparkle.style.pointerEvents = 'none';
-            sparkle.style.animation = 'sparkle 2s linear forwards';
+            sparkle.style.animation = 'sparkle 3s linear forwards';
+            sparkle.style.zIndex = '999';
             document.body.appendChild(sparkle);
             
             setTimeout(() => {
-                sparkle.remove();
-            }, 2000);
+                if (sparkle.parentNode) {
+                    sparkle.remove();
+                }
+            }, 3000);
         }
         
-        // Add CSS for sparkle animation
+        // Floating party emojis
+        function createFloatingEmoji() {
+            const emojis = ['🎉', '🥂', '💃', '🎈', '🌸', '💖', '🦄', '👑'];
+            const emoji = document.createElement('div');
+            emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.className = 'floating-emoji';
+            emoji.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+            emoji.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            emoji.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(emoji);
+            
+            setTimeout(() => {
+                if (emoji.parentNode) {
+                    emoji.remove();
+                }
+            }, 8000);
+        }
+        
+        // Button click effects
+        document.querySelectorAll('.buy-drink-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Create explosion of hearts
+                for(let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.innerHTML = '💕';
+                        heart.style.position = 'fixed';
+                        const rect = button.getBoundingClientRect();
+                        heart.style.left = rect.left + rect.width/2 + 'px';
+                        heart.style.top = rect.top + rect.height/2 + 'px';
+                        heart.style.fontSize = '20px';
+                        heart.style.pointerEvents = 'none';
+                        heart.style.animation = `heartBurst 1.5s ease-out forwards`;
+                        heart.style.transform = `rotate(${Math.random() * 360}deg)`;
+                        document.body.appendChild(heart);
+                        
+                        setTimeout(() => {
+                            if (heart.parentNode) {
+                                heart.remove();
+                            }
+                        }, 1500);
+                    }, i * 100);
+                }
+            });
+        });
+        
+        // Add CSS for new animations
         const style = document.createElement('style');
         style.textContent = `
             @keyframes sparkle {
-                0% { opacity: 1; transform: scale(0); }
-                50% { opacity: 1; transform: scale(1); }
-                100% { opacity: 0; transform: scale(0); }
+                0% { opacity: 1; transform: scale(0) rotate(0deg); }
+                50% { opacity: 1; transform: scale(1) rotate(180deg); }
+                100% { opacity: 0; transform: scale(0) rotate(360deg); }
+            }
+            
+            @keyframes heartBurst {
+                0% {
+                    opacity: 1;
+                    transform: scale(0) translateX(0) translateY(0);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(1) translateX(${Math.random() * 200 - 100}px) translateY(${Math.random() * 200 - 100}px);
+                }
             }
         `;
         document.head.appendChild(style);
         
-        // Create sparkles periodically
-        setInterval(createSparkle, 1000);
+        // Create effects periodically
+        setInterval(createSparkle, 800);
+        setInterval(createFloatingEmoji, 3000);
+        
+        // Initial burst of emojis
+        for(let i = 0; i < 5; i++) {
+            setTimeout(createFloatingEmoji, i * 500);
+        }
     </script>
 </body>
 </html>
